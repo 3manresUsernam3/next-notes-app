@@ -1,5 +1,7 @@
 import AddNote from "./components/AddNote";
 import NoteList from "./components/NoteList";
+import { sql } from "@vercel/postgres";
+
 
 export default function Home() {
   return (
