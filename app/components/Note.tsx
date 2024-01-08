@@ -109,7 +109,8 @@ const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
         <Modal modalOpen={openModalDelete} setModalOpen={setOpenModalDelete} modalLoading={modalLoading} setClosedWithCross={setClosedWithCross}>
           <form onSubmit={handleSubmitDeleteNote}>
             <h3 className="font-bold text-lg mb-4">Delete Note</h3>
-            <button onSubmit={e => handleSubmitDeleteNote} className="btn btn-outline bg-red-800 text-gray-50">Are you sure you want to delete this Note?</button>
+            <h2 className="font-bold mb-4">Are you sure you want to delete this Note?</h2>
+            <button onSubmit={e => handleSubmitDeleteNote} className="btn btn-outline bg-red-800 text-gray-50">Proceed</button>
           </form>
         </Modal>
       </td>
