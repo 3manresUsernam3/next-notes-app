@@ -1,7 +1,7 @@
 import INote from "@/types/notes";
 import { MdEdit } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import Modal from "./Modal";
 
 interface NoteProps {
@@ -13,8 +13,18 @@ const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
   const [modalLoading, setModalLoading] = useState<boolean>(false);
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
+  const [closedWithCross, setClosedWithCross] = useState<boolean>(false);
   const [noteTitleToEdit, setNoteTitleToEdit] = useState<string>(note.title);
+  const [prevNoteTitleToEdit, setPrevNoteTitleToEdit] = useState<string>(note.title);
   const [noteDescriptionToEdit, setNoteDescriptionToEdit] = useState<string | null>(note.content);
+  const [prevNoteDescriptionToEdit, setPrevNoteDescriptionToEdit] = useState<string | null>(note.content);
+
+  useEffect(() => {
+    setNoteTitleToEdit(prevNoteTitleToEdit);
+    setNoteDescriptionToEdit(prevNoteDescriptionToEdit);
+    setClosedWithCross(false);
+    console.log(closedWithCross);
+  }, [closedWithCross]);
 
   const handleSubmitEditNote: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -47,8 +57,8 @@ const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
             setNotes(data);
             setModalLoading(false);
           });
-        setNoteTitleToEdit("");
-        setNoteDescriptionToEdit("");
+        setPrevNoteTitleToEdit(noteTitleToEdit);
+        setPrevNoteDescriptionToEdit(noteDescriptionToEdit);
         setOpenModalEdit(false);
       });
   };
@@ -83,7 +93,7 @@ const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
       <td className="text-lg">{note.content}</td>
       <td className="flex gap-5 justify-end">
         <MdEdit onClick={() => setOpenModalEdit(true)} cursor="pointer" className="text-blue-500" size={25} />
-        <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit} modalLoading={modalLoading} >
+        <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit} modalLoading={modalLoading} setClosedWithCross={setClosedWithCross}>
           <form onSubmit={handleSubmitEditNote}>
             <h3 className="font-bold text-lg">Edit Note</h3>
             <div className="modal-action">
@@ -96,12 +106,10 @@ const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
           </form>
         </Modal>
         <FaTrashAlt onClick={() => setOpenModalDelete(true)} cursor="pointer" className="text-red-500" size={25} />
-        <Modal modalOpen={openModalDelete} setModalOpen={setOpenModalDelete} modalLoading={modalLoading} >
+        <Modal modalOpen={openModalDelete} setModalOpen={setOpenModalDelete} modalLoading={modalLoading} setClosedWithCross={setClosedWithCross}>
           <form onSubmit={handleSubmitDeleteNote}>
             <h3 className="font-bold text-lg mb-4">Delete Note</h3>
-            {/* <div className="modal-action"> */}
-              <button onSubmit={e => handleSubmitDeleteNote} className="btn btn-outline bg-red-800 text-gray-50">Are you sure you want to delete this Note?</button>
-            {/* </div> */}
+            <button onSubmit={e => handleSubmitDeleteNote} className="btn btn-outline bg-red-800 text-gray-50">Are you sure you want to delete this Note?</button>
           </form>
         </Modal>
       </td>

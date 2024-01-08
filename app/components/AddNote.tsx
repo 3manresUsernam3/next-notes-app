@@ -1,6 +1,6 @@
 import { MdNoteAdd } from "react-icons/md";
 import Modal from "./Modal";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { handleClientScriptLoad } from "next/script";
 import INote from "@/types/notes";
 
@@ -10,10 +10,16 @@ interface AddNoteProps {
 }
 
 const AddNote: React.FC<AddNoteProps> = ({ notes, setNotes }) => {
-  const [modalLoading, setModalLoading] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [newNoteTitle, setNewNoteTitle] = useState<string>(""); 
+  const [modalLoading, setModalLoading] = useState<boolean>(false);
+  const [closedWithCross, setClosedWithCross] = useState<boolean>(false);
   const [newNoteDescription, setNewNoteDescription] = useState<string>(""); 
+
+  useEffect(() => {
+    setClosedWithCross(false);
+    console.log(closedWithCross);
+  }, [closedWithCross]);
 
   const handleSubmitNewNote: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -53,7 +59,7 @@ const AddNote: React.FC<AddNoteProps> = ({ notes, setNotes }) => {
         Create note
         <MdNoteAdd className="ml-0.5" size={25} />
       </button>
-      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} modalLoading={modalLoading} >
+      <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} modalLoading={modalLoading} setClosedWithCross={setClosedWithCross}>
         <form onSubmit={handleSubmitNewNote}>
           <h3 className="font-bold text-lg">Add new Note</h3>
           <div className="modal-action">
